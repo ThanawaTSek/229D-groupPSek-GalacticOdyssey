@@ -898,7 +898,7 @@ MonoBehaviour:
   sprintSpeed: 8
   jumpForce: 6
   maxStamina: 100
-  staminaRegenRate: 2
+  staminaRegenRate: 4
   sprintStaminaCost: 10
   staminaSlider: {fileID: 1891810778}
 --- !u!1660057539 &9223372036854775807
