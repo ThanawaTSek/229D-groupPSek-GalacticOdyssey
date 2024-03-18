@@ -14,7 +14,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float maxStamina;
     [SerializeField] private float staminaRegenRate;
-
+    
+    private float currentSpeed;
+    private Vector3 moveDirection;
+    
     //Stamina Cost
     [Header("")]
     [SerializeField] private float sprintStaminaCost;
@@ -32,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         currentStamina = maxStamina;
+        currentSpeed = walkSpeed;
         /*UpdateStaminaUI();*/
     }
 
@@ -39,7 +43,12 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalMovement = Input.GetAxis("Horizontal");
         verticalMovement = Input.GetAxis("Vertical");
-
+        
+        //Convert Input to Vector3
+        moveDirection = new Vector3(horizontalMovement, 0f, verticalMovement).normalized;
+        //
+        
+        //Check object isGround
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -67,11 +76,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        Vector3 moveDirection = new Vector3(horizontalMovement, 0f, verticalMovement).normalized;
+        /// คำนวณตำแหน่งใหม่ของ Player โดยใช้ Vector3.forward และ Vector3.right ของกล้อง ////
+        Vector3 camForward = Camera.main.transform.forward;
+        Vector3 camRight = Camera.main.transform.right;
+
+        camForward.y = 0; // !Move naew tang
+        camRight.y = 0;
+
+        Vector3 moveDirectionRelativeToCamera = moveDirection.x * camRight.normalized + moveDirection.z * camForward.normalized;
+        moveDirectionRelativeToCamera.y = 0; // !Move naew tang
+        
+        rb.MovePosition(rb.position + moveDirectionRelativeToCamera * currentSpeed);
+        
+        //////////////////////////////////////////////////////////////////////////
+        /*Vector3 moveDirection = new Vector3(horizontalMovement, 0f, verticalMovement).normalized;*/
 
         if (isSprinting && currentStamina >= sprintStaminaCost)
         {
-            rb.MovePosition(rb.position + moveDirection * sprintSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + moveDirectionRelativeToCamera * sprintSpeed * Time.fixedDeltaTime);
             currentStamina -= sprintStaminaCost * Time.fixedDeltaTime;
         }
         else
