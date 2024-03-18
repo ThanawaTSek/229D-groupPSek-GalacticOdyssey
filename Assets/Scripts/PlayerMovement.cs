@@ -1,93 +1,106 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float walkSpeed,sprintSpeed,jumpFore,staminaMax,staminaRegenRate;
-    
-    private float currentStamita;
+    //Player Set Stat
+    [Header("Stat")]
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float sprintSpeed;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float maxStamina;
+    [SerializeField] private float staminaRegenRate;
+
+    //Stamina Cost
+    [Header("")]
+    [SerializeField] private float sprintStaminaCost;
+
+    private float currentStamina;
+    private bool isGrounded;
     private Rigidbody rb;
-    
-    // Start is called before the first frame update
-    void Start()
+    private float horizontalMovement;
+    private float verticalMovement;
+    private bool isSprinting;
+
+    public Text staminaText;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        currentStamita = staminaMax;
+        currentStamina = maxStamina;
+        UpdateStaminaUI();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        PlayerMove();
-        Sprint();
-        Jump();
+        horizontalMovement = Input.GetAxis("Horizontal");
+        verticalMovement = Input.GetAxis("Vertical");
+
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            Jump();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && currentStamina >= sprintStaminaCost)
+        {
+            isSprinting = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift) || currentStamina < sprintStaminaCost)
+        {
+            isSprinting = false;
+        }
+        
+        
     }
 
-    private void PlayerMove()
+    private void FixedUpdate()
     {
-        float moaveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-
-        Vector3 movement = new Vector3(moaveHorizontal, 0f, moveVertical);
-
-        if (movement != Vector3.zero)
-        {
-            if (Input.GetKey(KeyCode.LeftShift) && currentStamita > 0)
-            {
-                rb.velocity = movement * sprintSpeed;
-                currentStamita -= Time.deltaTime * 10f;
-            }
-            else
-            {
-                rb.velocity = movement * walkSpeed;
-            }
-
-            if (currentStamita < staminaMax)
-            {
-                currentStamita += staminaRegenRate;
-                currentStamita = Mathf.Clamp(currentStamita, 0f, staminaMax);
-            }
-        }
+        MovePlayer();
+        RegenerateStamina();
     }
 
-    private void Sprint()
+    private void MovePlayer()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && currentStamita > 0)
+        Vector3 moveDirection = new Vector3(horizontalMovement, 0f, verticalMovement).normalized;
+
+        if (isSprinting && currentStamina >= sprintStaminaCost)
         {
-            walkSpeed = sprintSpeed;
+            rb.MovePosition(rb.position + moveDirection * sprintSpeed * Time.fixedDeltaTime);
+            currentStamina -= sprintStaminaCost * Time.fixedDeltaTime;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || currentStamita <= 0)
+        else
         {
-            walkSpeed = walkSpeed;
+            rb.MovePosition(rb.position + moveDirection * walkSpeed * Time.fixedDeltaTime);
+            currentStamina += staminaRegenRate * Time.fixedDeltaTime;
         }
+
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        UpdateStaminaUI();
     }
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void RegenerateStamina()
+    {
+        if (!isSprinting && currentStamina < maxStamina)
         {
-            if (IsGround())
-            {
-                rb.AddForce(Vector3.up * jumpFore, ForceMode.Impulse);
-            }
+            currentStamina += staminaRegenRate * Time.fixedDeltaTime;
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+            UpdateStaminaUI();
         }
     }
 
-    private bool IsGround()
+    private void UpdateStaminaUI()
     {
-        RaycastHit hit;
-        float distance = 1f;
-        Vector3 dir = Vector3.down;
-
-        if (Physics.Raycast(transform.position,dir, out hit , distance))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        staminaText.text = "Stamina: " + Mathf.RoundToInt(currentStamina).ToString();
     }
 }
