@@ -26,13 +26,13 @@ public class PlayerMovement : MonoBehaviour
     private float verticalMovement;
     private bool isSprinting;
 
-    public Text staminaText;
+    [SerializeField] private Slider staminaSlider;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         currentStamina = maxStamina;
-        UpdateStaminaUI();
+        /*UpdateStaminaUI();*/
     }
 
     private void Update()
@@ -91,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void RegenerateStamina()
     {
-        if (!isSprinting && currentStamina < maxStamina)
+        if (!isSprinting && currentStamina < maxStamina && !Input.GetKey(KeyCode.LeftShift))
         {
             currentStamina += staminaRegenRate * Time.fixedDeltaTime;
             currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
@@ -101,6 +101,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateStaminaUI()
     {
-        staminaText.text = "Stamina: " + Mathf.RoundToInt(currentStamina).ToString();
+        staminaSlider.value = currentStamina / maxStamina;
     }
 }
