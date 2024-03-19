@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInChildren<Rigidbody>();
         currentStamina = maxStamina;
         currentSpeed = walkSpeed;
         Cursor.lockState = CursorLockMode.Locked;
