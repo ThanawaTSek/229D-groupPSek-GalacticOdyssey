@@ -36,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         currentStamina = maxStamina;
         currentSpeed = walkSpeed;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         /*UpdateStaminaUI();*/
     }
 
@@ -59,18 +61,20 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && currentStamina >= sprintStaminaCost)
         {
             isSprinting = true;
+            currentSpeed = sprintSpeed;
         }
         if (Input.GetKeyUp(KeyCode.LeftShift) || currentStamina < sprintStaminaCost)
         {
             isSprinting = false;
+            currentSpeed = walkSpeed;
         }
         
-        
+        MovePlayer();
+        RotatePlayer();
     }
 
     private void FixedUpdate()
     {
-        MovePlayer();
         RegenerateStamina();
     }
 
@@ -86,22 +90,19 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirectionRelativeToCamera = moveDirection.x * camRight.normalized + moveDirection.z * camForward.normalized;
         moveDirectionRelativeToCamera.y = 0; // !Move naew tang
         
-        rb.MovePosition(rb.position + moveDirectionRelativeToCamera * currentSpeed);
+        rb.MovePosition(rb.position + moveDirectionRelativeToCamera * currentSpeed * Time.deltaTime);
         
         //////////////////////////////////////////////////////////////////////////
         /*Vector3 moveDirection = new Vector3(horizontalMovement, 0f, verticalMovement).normalized;*/
-
         if (isSprinting && currentStamina >= sprintStaminaCost)
         {
-            rb.MovePosition(rb.position + moveDirectionRelativeToCamera * sprintSpeed * Time.fixedDeltaTime);
-            currentStamina -= sprintStaminaCost * Time.fixedDeltaTime;
+            currentStamina -= sprintStaminaCost * Time.deltaTime;
         }
         else
         {
-            rb.MovePosition(rb.position + moveDirection * walkSpeed * Time.fixedDeltaTime);
-            currentStamina += staminaRegenRate * Time.fixedDeltaTime;
+            currentStamina += staminaRegenRate * Time.deltaTime;
         }
-
+        
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
         UpdateStaminaUI();
     }
@@ -124,5 +125,17 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateStaminaUI()
     {
         staminaSlider.value = currentStamina / maxStamina;
+    }
+    
+    
+    private void RotatePlayer()
+    {
+        if (verticalMovement <= 0) return;
+        Vector3 cameraDirection = Camera.main.transform.forward;
+        Vector3 velocity = new Vector3();
+        cameraDirection.y = 0;
+        
+        if (transform.forward.normalized == cameraDirection.normalized) return;
+        transform.forward = Vector3.SmoothDamp(transform.forward,transform.forward.magnitude * cameraDirection.normalized, ref velocity, 0.03f);
     }
 }
