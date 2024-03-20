@@ -354,7 +354,7 @@ RectTransform:
   - {fileID: 1900983142}
   - {fileID: 1356900480}
   - {fileID: 1067303712}
-  m_Father: {fileID: 1254155477}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -658,9 +658,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2e76589e53ea944a1e82128e70b465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playButton: {fileID: 1900983143}
-  creditButton: {fileID: 1356900481}
-  exitButton: {fileID: 1067303713}
+  playButton: {fileID: 0}
+  creditButton: {fileID: 0}
+  exitButton: {fileID: 0}
 --- !u!4 &1012109031
 Transform:
   m_ObjectHideFlags: 0
@@ -886,8 +886,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 554364161}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1356900479
@@ -1299,6 +1298,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1254155477}
+  - {fileID: 554364161}
   - {fileID: 1968104699}
   - {fileID: 1621189048}
   - {fileID: 1012109031}
