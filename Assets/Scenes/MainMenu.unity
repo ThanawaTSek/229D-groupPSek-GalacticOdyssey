@@ -658,9 +658,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2e76589e53ea944a1e82128e70b465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playButton: {fileID: 0}
-  creditButton: {fileID: 0}
-  exitButton: {fileID: 0}
+  playButton: {fileID: 1900983143}
+  creditButton: {fileID: 1356900481}
+  exitButton: {fileID: 1067303713}
 --- !u!4 &1012109031
 Transform:
   m_ObjectHideFlags: 0
@@ -670,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 1012109029}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 756.83887, y: 543.92346, z: 512.2937}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
