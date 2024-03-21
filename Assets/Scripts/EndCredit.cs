@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndCredit : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class EndCredit : MonoBehaviour
     private void Update()
     {
         ScrollCrediits();
+        BackToMenu();
     }
 
     void DisplayCredits()
@@ -36,5 +38,13 @@ public class EndCredit : MonoBehaviour
         Vector3 currentPosition = creditText.rectTransform.position;
         currentPosition.y += speed * Time.deltaTime;
         creditText.rectTransform.position = currentPosition;
+    }
+
+    void BackToMenu()
+    {
+        if (Input.GetKey(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }
