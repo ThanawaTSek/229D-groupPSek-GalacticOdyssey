@@ -7,13 +7,18 @@ public class JumpPlate : MonoBehaviour
 {
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpDelay;
+    [SerializeField] private Vector3 animationScale;
+    [SerializeField] private float animationDuration = 0.3f;
     private bool _isPlayerOnPlate;
     private bool _isWaitingForJump;
+    private bool _canPushPlayer = true;
     
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         if (_isWaitingForJump) return;
+        if (!_canPushPlayer) return;
+        _canPushPlayer = false;
         StartCoroutine(AddJumpForce(other.gameObject));
         _isPlayerOnPlate = true;
     }
@@ -31,11 +36,12 @@ public class JumpPlate : MonoBehaviour
         if (!_isPlayerOnPlate)
         {
             _isWaitingForJump = false;
+            _canPushPlayer = true;
             yield break;
         }
         ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
         playerController.AddJumpForce(jumpForce);
-        transform.DOScale((Vector3.up * 2f) + transform.localScale, 0.3f).SetLoops(2, LoopType.Yoyo);
+        transform.DOScale(animationScale, animationDuration).SetLoops(4, LoopType.Yoyo).OnComplete(() => _canPushPlayer = true);
         _isWaitingForJump = false;
     }
 }
