@@ -8,27 +8,41 @@ public class PressurePlateDoor : MonoBehaviour
     [SerializeField] private float doorOpenHigh;
     [SerializeField] private float doorOpenDuration;
     [SerializeField] private float doorCloseDuration;
-    private Vector3 _originalPos;
+    [SerializeField] private float doorClosingDelay;
+    private Vector3 _onOpenPos;
     private Vector3 _onClosePos;
+    private Vector3 _originalPos;
     private bool _isDoorOpening;
     private bool _isDoorClosing;
-    
+    private Coroutine _doorCoroutine;
 
     private void Start()
     {
-        _originalPos = transform.position;
+       _originalPos = transform.position;
     }
 
     public void OpenDoor()
     {
         if (_isDoorOpening) return;
-        StartCoroutine(MoveDoorUp());
+        if (_isDoorClosing)
+        {
+            StopCoroutine(_doorCoroutine);
+            _isDoorClosing = false;
+        }
+        _onOpenPos = transform.position;
+        _doorCoroutine = StartCoroutine(MoveDoorUp());
     }
 
     public void CloseDoor()
     {
-        _originalPos = transform.position;
-        
+        if (_isDoorClosing) return;
+        if (_isDoorOpening)
+        {
+            StopCoroutine(_doorCoroutine);
+            _isDoorOpening = false;
+        }
+        _onClosePos = transform.position;
+        _doorCoroutine = StartCoroutine(MoveDoorDown());
     }
 
     private IEnumerator MoveDoorUp()
@@ -39,7 +53,7 @@ public class PressurePlateDoor : MonoBehaviour
         while (timeCount < doorOpenDuration)
         {
             _isDoorOpening = true;
-            transform.position = Vector3.Lerp(_originalPos, doorOpenPos, timeCount / doorOpenDuration);
+            transform.position = Vector3.Lerp(_onOpenPos, doorOpenPos, timeCount / doorOpenDuration);
             timeCount += Time.deltaTime;
             yield return null;
         }
@@ -49,6 +63,7 @@ public class PressurePlateDoor : MonoBehaviour
 
     private IEnumerator MoveDoorDown()
     {
+        yield return new WaitForSeconds(doorClosingDelay);
         float timeCount = 0;
 
         while (timeCount < doorCloseDuration)
@@ -59,6 +74,7 @@ public class PressurePlateDoor : MonoBehaviour
             yield return null;
         }
 
-        _isDoorClosing = true;
+        _isDoorClosing = false;
     }
 }
+

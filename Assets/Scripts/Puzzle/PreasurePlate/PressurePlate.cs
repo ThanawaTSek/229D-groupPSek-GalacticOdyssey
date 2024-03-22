@@ -12,4 +12,13 @@ public class PressurePlate : MonoBehaviour
             pressurePlateDoor.OpenDoor();
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        foreach (PressurePlateDoor pressurePlateDoor in doors)
+        {
+            pressurePlateDoor.CloseDoor();
+        }
+    }
 }
