@@ -1,4 +1,5 @@
 ﻿ using System;
+ using DG.Tweening;
  using UnityEngine;
  using Random = UnityEngine.Random;
 #if ENABLE_INPUT_SYSTEM 
@@ -394,13 +395,6 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Key")) return;
-            GameManager.Instance.CollectKey();  
-            Destroy(other.gameObject);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using StarterAssets;
 using UnityEngine;
 
@@ -27,9 +28,14 @@ public class JumpPlate : MonoBehaviour
     {
         _isWaitingForJump = true;
         yield return new WaitForSeconds(jumpDelay);
-        if (!_isPlayerOnPlate) yield break;
+        if (!_isPlayerOnPlate)
+        {
+            _isWaitingForJump = false;
+            yield break;
+        }
         ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
         playerController.AddJumpForce(jumpForce);
+        transform.DOScale((Vector3.up * 2f) + transform.localScale, 0.3f).SetLoops(2, LoopType.Yoyo);
         _isWaitingForJump = false;
     }
 }
