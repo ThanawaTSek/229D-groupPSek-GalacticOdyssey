@@ -9,7 +9,7 @@ public class EndCredit : MonoBehaviour
 {
     public TextMeshProUGUI creditText;
     [SerializeField] public string[] creditLiine;
-    private float speed = 50f;
+    private float speed = 60f;
 
     private float scrollPositiion;
 
