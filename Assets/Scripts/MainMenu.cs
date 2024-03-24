@@ -6,21 +6,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
+using Cursor = UnityEngine.Cursor;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button playButton;
     [SerializeField] private Button creditButton;
-    [SerializeField] private Button exitButton; 
+    /*[SerializeField] private Button exitButton; */
     private void Start()
     {
         playButton.onClick.AddListener(PlayGame);
         creditButton.onClick.AddListener(ShowCredits);
-        exitButton.onClick.AddListener(ExitGame);
+        /*exitButton.onClick.AddListener(ExitGame);*/
     }
     public void PlayGame()
     {
-        SceneManager.LoadScene("Play");
+        SceneManager.LoadScene("Map");
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void ShowCredits()
@@ -28,9 +30,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("EndCredit");
     }
 
-    public void ExitGame()
+    /*public void ExitGame()
     {
         Application.Quit();
-    }
+    }*/
     
 }
