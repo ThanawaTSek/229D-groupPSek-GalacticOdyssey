@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
     void LateUpdate()
     {
-        if (_player.transform.position.y < deadZone || Input.GetKeyDown(KeyCode.R))
+        if (_player.transform.position.y < deadZone)
         {
             if (!_lastCheckPoint)
             {
