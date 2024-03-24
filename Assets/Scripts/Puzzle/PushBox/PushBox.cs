@@ -25,6 +25,7 @@ public class PushBox : MonoBehaviour
     private bool _isInputValueDown;
     private bool _isInputToggleDown;
     private float _lastTimePressed;
+    private Vector3 _startPosition;
     [FormerlySerializedAs("_isRotating")] public bool IsRotating;
 
     public PushBoxColor BoxColor => boxColor;
@@ -47,10 +48,16 @@ public class PushBox : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _startPosition = transform.position;
     }
 
     private void Update()
     {
+        if (transform.position.y < GameManager.Instance.deadZone)
+        {
+            transform.position = _startPosition;
+        }
+        
         Collider[] objInArea = Physics.OverlapSphere(transform.position, interactionDistance, LayerMask.GetMask("Player"));
         if (objInArea.Length <= 0)
         {
