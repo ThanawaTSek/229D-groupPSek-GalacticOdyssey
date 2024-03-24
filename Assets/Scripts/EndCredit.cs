@@ -44,7 +44,7 @@ public class EndCredit : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("Menu 3D");
         }
     }
 }

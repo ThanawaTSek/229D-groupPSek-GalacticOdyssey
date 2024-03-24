@@ -11,16 +11,16 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button playButton;
     [SerializeField] private Button creditButton;
-    [SerializeField] private Button exitButton; 
+    /*[SerializeField] private Button exitButton; */
     private void Start()
     {
         playButton.onClick.AddListener(PlayGame);
         creditButton.onClick.AddListener(ShowCredits);
-        exitButton.onClick.AddListener(ExitGame);
+        /*exitButton.onClick.AddListener(ExitGame);*/
     }
     public void PlayGame()
     {
-        SceneManager.LoadScene("Play");
+        SceneManager.LoadScene("Map");
     }
 
     public void ShowCredits()
@@ -28,9 +28,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("EndCredit");
     }
 
-    public void ExitGame()
+    /*public void ExitGame()
     {
         Application.Quit();
-    }
+    }*/
     
 }
