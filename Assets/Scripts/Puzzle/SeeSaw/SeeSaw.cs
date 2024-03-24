@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 
 public class SeeSaw : MonoBehaviour
 {
-    [SerializeField] private float maxAngle = 90;
     [SerializeField] private float angleSpeed = 30;
     [SerializeField] private float maxAngularDistance = 10;
     private void OnTriggerStay(Collider other)
