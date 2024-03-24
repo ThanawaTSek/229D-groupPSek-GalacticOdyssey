@@ -5,6 +5,7 @@ using UnityEngine;
 public class HowToPlay : MonoBehaviour
 {
     [SerializeField] private GameObject howToPlay;
+    private bool _isFirstTime = true;
     
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,10 @@ public class HowToPlay : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            CloseHowToPlay();
+            howToPlay.SetActive(!howToPlay.activeSelf);
+            if (!_isFirstTime) return;
+            _isFirstTime = false;
+            Time.timeScale = 1f;
         }
     }
 
