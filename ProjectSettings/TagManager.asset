@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - CinemachineTarget
   - Key
+  - PushBox
   layers:
   - Default
   - TransparentFX
