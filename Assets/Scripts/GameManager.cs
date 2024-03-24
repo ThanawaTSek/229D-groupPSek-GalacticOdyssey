@@ -1,15 +1,19 @@
+using DG.Tweening;
 using StarterAssets;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [HideInInspector] public int keysCollected;
+    [SerializeField] private TextMeshProUGUI keyText;
     public float deadZone = -10;
 
     private CheckPoint _lastCheckPoint;
     private ThirdPersonController _player;
     private int _totalKeys;
     private Vector3 _playerStartPosition;
+    public bool IsWin => keysCollected >= _totalKeys;
 
     public CheckPoint LastCheckPoint
     {
@@ -35,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     void LateUpdate()
     {
-        if (_player.transform.position.y < deadZone || Input.GetKeyDown(KeyCode.R))
+        if (_player.transform.position.y < deadZone)
         {
             if (!_lastCheckPoint)
             {
@@ -49,10 +53,8 @@ public class GameManager : MonoBehaviour
     public void CollectKey()
     {
         keysCollected++;
-        if (keysCollected == _totalKeys)
-        {
-            Debug.Log("All keys collected!"); // win the game
-        }
+        keyText.text = keysCollected + " / " + _totalKeys;
+        keyText.transform.DOScale(Vector3.one * 1.25f, 0.1f).SetLoops(2, LoopType.Yoyo);
     }
 
     private void OnDrawGizmos()
