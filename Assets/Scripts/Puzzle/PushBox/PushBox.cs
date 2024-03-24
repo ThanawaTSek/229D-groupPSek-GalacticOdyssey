@@ -1,5 +1,7 @@
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum PushBoxColor
@@ -22,6 +24,10 @@ public class PushBox : MonoBehaviour
     private Rigidbody _rigidbody;
     private bool _isInputValueDown;
     private bool _isInputToggleDown;
+    private float _lastTimePressed;
+    [FormerlySerializedAs("_isRotating")] public bool IsRotating;
+
+    public PushBoxColor BoxColor => boxColor;
 
     public Vector3 CameraForward
     {
@@ -84,6 +90,8 @@ public class PushBox : MonoBehaviour
             _inputValue = 0;
         }
         
+        if (_lastTimePressed + 0.15f > Time.time) return;
+        
         if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.T))
         {
             scrollbar.gameObject.SetActive(true);
@@ -99,8 +107,25 @@ public class PushBox : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.T) && _isInputToggleDown)
         {
-            float torque = torqueForce * _inputValue;
-            _rigidbody.AddTorque(Vector3.up * torque, ForceMode.Impulse);
+            int angleValue;
+            switch (_inputValue)
+            {
+                case >= 0.75f:
+                    angleValue = 60;
+                    break;
+                case >= 0.5f:
+                    angleValue = 45;
+                    break;
+                case >= 0.25f:
+                    angleValue = 30;
+                    break;
+                default:
+                    angleValue = 15;
+                    break;
+            }
+            
+            IsRotating = true;
+            transform.DORotate(transform.rotation.eulerAngles + (Vector3.up * angleValue), 0.15f).OnComplete(() => IsRotating = false);
             ResetInput();
         }
     }
@@ -110,13 +135,14 @@ public class PushBox : MonoBehaviour
         scrollbar.gameObject.SetActive(false);
         _inputValue = 0;
         _isInputToggleDown = false;
+        _lastTimePressed = Time.time;
     }
     private void Push(Vector3 direction, float force)
     {
         _rigidbody.AddForce(direction * force, ForceMode.Impulse);
     }
     
-    private Color GetBoxColor(PushBoxColor color)
+    public static Color GetBoxColor(PushBoxColor color)
     {
         switch (color)
         {
